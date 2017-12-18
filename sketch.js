@@ -14,42 +14,54 @@ Site:
   jasonlabbe3d.com
 */
 
-var drawLength = 1000;
+var drawLength = 500;
 var noiseScale = 0.005;
 var strokeLength = 60;
 
-var imgNames = ["https://i.imgur.com/Q2aDVlm.jpg", "https://i.imgur.com/8BJ2aG1.jpg", "https://i.imgur.com/8BJ2aG1.jpg","https://i.imgur.com/5VpXYR7.jpg", "https://www.biography.com/.image/t_share/MTE1ODA0OTcxODExNDQwMTQx/vincent-van-gogh-9515695-3-402.jpg",'https://upload.wikimedia.org/wikipedia/commons/9/95/Van_Gogh_Self-Portrait_with_Straw_Hat_1887-Detroit.jpg']; // Add your image's name here.
+var imgNames = [ "https://i.imgur.com/kp4UNgj.jpg","https://i.imgur.com/5VpXYR7.jpg", "https://www.biography.com/.image/t_share/MTE1ODA0OTcxODExNDQwMTQx/vincent-van-gogh-9515695-3-402.jpg",'https://upload.wikimedia.org/wikipedia/commons/9/95/Van_Gogh_Self-Portrait_with_Straw_Hat_1887-Detroit.jpg']; // Add your image's name here.
 var imgs = [];
 var imgIndex = -1;
 
 var frame;
 
-//var capturer = new CCapture( { format: 'webm', framerate: 60 } );
+
+var capturer
+
 
 function preload() {
   // Pre-load all images.
   for (let i = 0; i < imgNames.length; i++) {
     let newImg = loadImage(imgNames[i]);
     imgs.push(newImg);
+
   }
 }
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  background(255);
+  background(0);
 
   changeImage();
+
+  capturer = new CCapture( {
+      display: true,
+      format: 'png',
+      verbose: true,
+      quality: 99,
+     });
+     capturer.start();
 }
 
 
 function draw() {
+  if (frame = drawLength){
+    console.log("Saving Record");
+    capturer.save();
+  }
   if (frame > drawLength) {
     return;
   }
-  //capturer.start();
-//capturer.capture(defaultCanvas0);
   // Only seems to work inside draw..
   let img = imgs[imgIndex];
   img.loadPixels();
@@ -95,14 +107,14 @@ function draw() {
 
     pop();
   }
-
+capturer.capture(defaultCanvas0);
   frame++;
 }
 
 
 function changeImage() {
 
-  background(255);
+  background(0);
 
   frame = 0;
 
@@ -115,7 +127,15 @@ function changeImage() {
 }
 
 
-function mousePressed() {
-  changeImage();
-
+function keyTyped() {
+  if (key === "r"){
+    console.log("Saving Record");
+    capturer.save();
+  }
+  else if (key === "c"){
+    changeImage();
+  }
+  else if (key === 'p'){
+    capturer.stop();
+  }
 }
